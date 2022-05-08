@@ -1,22 +1,36 @@
-import logo from './logo.svg';
+
 import './App.css';
+import PokeApi from './components/PokeApi';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+
 
 function App() {
+
+  const [pokemon, setPokemon] = useState([])
+  const [isFalse, setIsFalse] = useState(false)
+  
+
+  useEffect(()=>{
+    axios.get('https://pokeapi.co/api/v2/pokemon').then(res =>{
+      setPokemon(res.data.results.map(p => p.name))
+    })
+
+  }, [])
+
+  const fetchButton = () =>{
+    setIsFalse(!isFalse);
+    console.log(isFalse);
+  }
+  
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <button className="btn-btn-primary" onClick={fetchButton}>{isFalse ? "Collapse": "Fetch Pokemon" }</button>
+        {isFalse ? <PokeApi pokemon={pokemon}/> : ""}
+        
+        
       </header>
     </div>
   );
